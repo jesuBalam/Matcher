@@ -1,0 +1,7 @@
+E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\bin\Debug\FactureMatch.exe.config
+E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\bin\Debug\FactureMatch.exe
+E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\bin\Debug\FactureMatch.pdb
+E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csprojAssemblyReference.cache
+E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csproj.CoreCompileInputs.cache
+E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\obj\Debug\FactureMatch.exe
+E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\obj\Debug\FactureMatch.pdb
