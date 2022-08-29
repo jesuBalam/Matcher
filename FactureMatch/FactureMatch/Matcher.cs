@@ -76,7 +76,7 @@ namespace FactureMatch
                 3, 20, Magna, Efectivo
                 4, 22, Diesel, Efectivo
 
-                TABLE 3: Resultado (Clon primera tabla + Id segunda tabla) OUTPUT:::
+                TABLE 3: Resultado (Clon primera tabla + Id segunda tabla) OUTPUT::: 
                 1, 10, Magna, Tarjeta, 1
                 2, 12, Magna, Tarjeta, 1
                 3, 5, Magna, Tarjeta, 1
@@ -88,6 +88,9 @@ namespace FactureMatch
                 9, 11, Magna, Efectivo, 1
                 10, 10, Diesel, Tarjeta, 4
                 11, 12, Diesel, Efectivo, 4
+
+                Tomar en cuenta el monto objetivo y que coincidan los productos
+                (Magna con magna y diesel con diesel en este ejemplo)
              */
         }
 
