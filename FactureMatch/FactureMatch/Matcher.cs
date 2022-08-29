@@ -27,30 +27,68 @@ namespace FactureMatch
 
         public static void GenerateDummyTable()
         {
+            tableAmounts.Columns.Add("ID", typeof(string));
             tableAmounts.Columns.Add("Monto", typeof(decimal));
             tableAmounts.Columns.Add("Producto", typeof(string));
-            tableAmounts.Columns.Add("ID", typeof(string));
+            
 
-            tableAmounts.Rows.Add(40, "Magna", 1);
-            tableAmounts.Rows.Add(30, "Magna", 2);
-            tableAmounts.Rows.Add(45, "Diesel", 3);
-            tableAmounts.Rows.Add(44, "Magna", 4);
-            tableAmounts.Rows.Add(42, "Diesel", 5);
-            tableAmounts.Rows.Add(40, "Diesel", 6);
-            tableAmounts.Rows.Add(22, "Diesel", 7);
-            tableAmounts.Rows.Add(20, "Diesel", 8);
-            tableAmounts.Rows.Add(62, "Diesel", 9);
+            tableAmounts.Rows.Add(1, 18, "Magna");
+            tableAmounts.Rows.Add(2, 11, "Magna");
+            tableAmounts.Rows.Add(3, 10, "Diesel");
+            tableAmounts.Rows.Add(4, 12, "Magna");
+            tableAmounts.Rows.Add(5, 11.40, "Diesel");
+            tableAmounts.Rows.Add(6, 13.80, "Diesel");
+            tableAmounts.Rows.Add(7, 6.00, "Diesel");
+            tableAmounts.Rows.Add(8, 300.00, "Diesel");
+            tableAmounts.Rows.Add(9, 96.00, "Diesel");
 
-
+            tableTargetAmount.Columns.Add("ID", typeof(string));
             tableTargetAmount.Columns.Add("Monto", typeof(decimal));
             tableTargetAmount.Columns.Add("Producto", typeof(string));
             tableTargetAmount.Columns.Add("MetodoPago", typeof(string));
 
-            tableTargetAmount.Rows.Add(70, "Magna", "Efectivo");
-            tableTargetAmount.Rows.Add(82, "Magna", "Tarjeta");
-            tableTargetAmount.Rows.Add(106, "Magna", "Transferencia");
-            tableTargetAmount.Rows.Add(70, "Magna", "Transferencia Oxxo");
+            tableTargetAmount.Rows.Add(1, 70, "Magna", "Efectivo");
+            tableTargetAmount.Rows.Add(2, 82, "Magna", "Tarjeta");
+            tableTargetAmount.Rows.Add(3, 106, "Magna", "Transferencia");
+            tableTargetAmount.Rows.Add(4, 70, "Magna", "Transferencia Oxxo");
             //tableTargetAmount.Rows.Add(70, "Magna", "Transferencia Cell");
+
+
+
+            //ISAAC EXAMPLE::
+            /*
+             * TABLE 1: (Precio, Producto, FormaPago)
+                1, 10, Magna, Tarjeta
+                2, 12, Magna, Tarjeta
+                3, 5, Magna, Tarjeta
+                4, 15, Magna, Transferencia
+                5, 10, Magna, Transferencia
+                6, 2, Magna, Transferencia
+                7, 8, Magna, Transferencia
+                8, 20, Magna, Efectivo
+                9, 11, Magna, Efectivo
+                10, 10, Diesel, Tarjeta
+                11, 12, Diesel, Efectivo
+
+                TABLE 2: (Id, Precio, Producto, FormaPago)
+                1, 38, Magna, Tarjeta
+                2, 35, Magna, Transferencia
+                3, 20, Magna, Efectivo
+                4, 22, Diesel, Efectivo
+
+                TABLE 3: Resultado (Clon primera tabla + Id segunda tabla) OUTPUT:::
+                1, 10, Magna, Tarjeta, 1
+                2, 12, Magna, Tarjeta, 1
+                3, 5, Magna, Tarjeta, 1
+                4, 15, Magna, Transferencia, 2
+                5, 10, Magna, Transferencia, 2
+                6, 2, Magna, Transferencia, 2
+                7, 8, Magna, Transferencia, 2
+                8, 20, Magna, Efectivo, 3
+                9, 11, Magna, Efectivo, 1
+                10, 10, Diesel, Tarjeta, 4
+                11, 12, Diesel, Efectivo, 4
+             */
         }
 
         public static void ProcessDummyTables()
@@ -127,12 +165,14 @@ namespace FactureMatch
                 }
             }
 
+            foreach (var res in responseList)
+            {
+                Console.WriteLine(res.id + " | " + res.price + " | " + res.product + " | " + res.paymentMethod);
+            }
+
             return resultTable;
 
-            //foreach (var res in responseList)
-            //{
-            //    Console.WriteLine(res.id + " | " + res.price + " | " + res.product + " | " + res.paymentMethod);
-            //}
+            
 
         }
 
