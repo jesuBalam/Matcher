@@ -5,3 +5,10 @@ E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\obj\Debug\
 E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csproj.CoreCompileInputs.cache
 E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\obj\Debug\FactureMatch.exe
 E:\Developer\Hiuman\C#\XmlData\FactureMatch\FactureMatch\FactureMatch\obj\Debug\FactureMatch.pdb
+C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\bin\Debug\FactureMatch.exe.config
+C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\bin\Debug\FactureMatch.exe
+C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\bin\Debug\FactureMatch.pdb
+C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csproj.AssemblyReference.cache
+C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csproj.CoreCompileInputs.cache
+C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.exe
+C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.pdb
