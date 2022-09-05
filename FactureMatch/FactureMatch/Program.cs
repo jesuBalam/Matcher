@@ -9,10 +9,12 @@ namespace FactureMatch
     class Program
     {
         static void Main(string[] args)
-        {            
-            Matcher.GenerateDummyTable();            
-            Matcher.ProcessDummyTables();
+        {
+            Matcher matcher = new Matcher();
+            matcher.GenerateDummyTable();
+            matcher.ProcessDummyTables();
             Console.ReadKey();
         }
     }
 }
+  
