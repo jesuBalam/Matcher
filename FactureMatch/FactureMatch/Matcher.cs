@@ -48,7 +48,7 @@ namespace FactureMatch
             tableTargetAmount.Rows.Add(3, 20, "Magna", "Efectivo");
             tableTargetAmount.Rows.Add(4, 22, "Diesel", "Efectivo");
 
-            //  CARLOS EXAMPLE::
+            //  ISAAC EXAMPLE::
             /*
              * TABLE 1: (Precio, Producto, FormaPago)
                 1, 10, Magna, Tarjeta 1
