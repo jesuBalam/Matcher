@@ -12,3 +12,10 @@ C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\obj\Debug\Factu
 C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csproj.CoreCompileInputs.cache
 C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.exe
 C:\Users\Admin GH\source\repos\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.pdb
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\bin\Debug\FactureMatch.exe.config
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\bin\Debug\FactureMatch.exe
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\bin\Debug\FactureMatch.pdb
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csprojAssemblyReference.cache
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csproj.CoreCompileInputs.cache
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.exe
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.pdb

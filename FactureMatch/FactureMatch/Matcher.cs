@@ -25,17 +25,17 @@ namespace FactureMatch
 
 
 
-            tableAmounts.Rows.Add(1, 10, "Magna", "Tarjeta");
-            tableAmounts.Rows.Add(2, 12, "Magna", "Tarjeta");
-            tableAmounts.Rows.Add(3, 5, "Magna", "Tarjeta");
-            tableAmounts.Rows.Add(4, 15, "Magna", "Transferencia");
-            tableAmounts.Rows.Add(5, 10, "Magna", "Transferencia");
-            tableAmounts.Rows.Add(6, 2, "Magna", "Transferencia");
-            tableAmounts.Rows.Add(7, 8, "Magna", "Transferencia");
-            tableAmounts.Rows.Add(8, 20, "Magna", "Efectivo");
-            tableAmounts.Rows.Add(9, 11, "Magna", "Efectivo");
-            tableAmounts.Rows.Add(10, 10, "Diesel", "Tareta");
-            tableAmounts.Rows.Add(11, 12, "Diesel", "Efectivo");
+            tableAmounts.Rows.Add(1, 20.97, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(2, 20.97, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(3, 20.97, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(4, 20.97, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(5, 21.37, "Magna", "Efectivo");       
+            tableAmounts.Rows.Add(10, 22.60, "Diesel", "Tarjeta");
+            tableAmounts.Rows.Add(12, 22.60, "Diesel", "Tarjeta");
+            tableAmounts.Rows.Add(13, 22.60, "Diesel", "Efectivo");
+            tableAmounts.Rows.Add(14, 22.62, "Diesel", "Efectivo");
+            tableAmounts.Rows.Add(15, 22.67, "Diesel", "Efectivo");
+            tableAmounts.Rows.Add(16, 22.67, "Diesel", "Efectivo");
 
 
             tableTargetAmount.Columns.Add("ID", typeof(int));
@@ -43,10 +43,9 @@ namespace FactureMatch
             tableTargetAmount.Columns.Add("Producto", typeof(string));
             tableTargetAmount.Columns.Add("MetodoPago", typeof(string));
 
-            tableTargetAmount.Rows.Add(1, 38, "Magna", "Tarjeta");
-            tableTargetAmount.Rows.Add(2, 35, "Magna", "Transferencia");
-            tableTargetAmount.Rows.Add(3, 20, "Magna", "Efectivo");
-            tableTargetAmount.Rows.Add(4, 22, "Diesel", "Efectivo");
+            tableTargetAmount.Rows.Add(1, 105.25, "Magna", "Efectivo");
+            tableTargetAmount.Rows.Add(2, 67.8, "Diesel", "Tarjeta");
+            tableTargetAmount.Rows.Add(3, 67.96, "Diesel", "Efectivo");
 
             //  CARLOS EXAMPLE::
             /*
@@ -120,11 +119,12 @@ namespace FactureMatch
 
             foreach (var item in targetList.ToList())
             {
-                foreach (var r in referenceList.Where(x => x.product.Equals(item.product) && x.PaymentMethod.Equals(item.paymentMethod)).ToList())
+                foreach (var r in referenceList.Where(x => x.product.Equals(item.product) && (x.PaymentMethod.Equals(item.paymentMethod) || x.PaymentMethod.Equals("Efectivo"))).ToList())
                 {
                     AddReferenceList(item, r);
                     if (item.finalPrice == 0)
                     {
+                        referenceList.Remove(r);
                         targetList.Remove(item);
                         break;
                     }
@@ -142,6 +142,7 @@ namespace FactureMatch
                     if (target.finalPrice == 0)
                     {
                         targetList.Remove(target);
+                        referenceList.Remove(reference);
                     }
                 }
                 else
