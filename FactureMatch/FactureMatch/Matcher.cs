@@ -47,7 +47,7 @@ namespace FactureMatch
             tableTargetAmount.Rows.Add(2, 67.8, "Diesel", "Tarjeta");
             tableTargetAmount.Rows.Add(3, 67.96, "Diesel", "Efectivo");
 
-            //  CARLOS EXAMPLE::
+            //  ISAAC EXAMPLE::
             /*
              * TABLE 1: (Precio, Producto, FormaPago)
                 1, 10, Magna, Tarjeta 1
