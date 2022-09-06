@@ -98,98 +98,178 @@ namespace FactureMatch
             for (int row = 0; row < referenceTable.Rows.Count; row++)
             {
                 Reference reference = new Reference();
-                reference.id = (int)referenceTable.Rows[row]["ID"];
+                reference.id = (int)referenceTable.Rows[row]["Id"];
                 reference.price = Convert.ToDecimal(referenceTable.Rows[row]["Monto"]);
                 reference.product = referenceTable.Rows[row]["Producto"].ToString();
-                reference.PaymentMethod = referenceTable.Rows[row]["FormaPago"].ToString();
+                reference.PaymentMethod = referenceTable.Rows[row]["FormPago"].ToString();
                 referenceList.Add(reference);
             }
 
             for (int row = 0; row < targetTable.Rows.Count; row++)
             {
                 Target target = new Target();
-                target.Id = (int)targetTable.Rows[row]["ID"];
-                target.paymentMethod = targetTable.Rows[row]["MetodoPago"].ToString();
+                target.Id = (int)targetTable.Rows[row]["Id"];
+                target.paymentMethod = targetTable.Rows[row]["FormPago"].ToString();
                 target.finalPrice = Convert.ToDecimal(targetTable.Rows[row]["Monto"]);
                 target.product = targetTable.Rows[row]["Producto"].ToString();
                 targetList.Add(target);
             }
 
-
+            foreach(var a in referenceList)
+            {
+                var result = new Result()
+                {
+                    id = a.id,
+                    price = a.price,
+                    product = a.product,
+                    paymentMethod = a.PaymentMethod,
+                    IdTarget = null
+                };                
+                responseList.Add(result);
+            }
 
             foreach (var item in targetList.ToList())
             {
-                foreach (var r in referenceList.Where(x => x.product.Equals(item.product) && (x.PaymentMethod.Equals(item.paymentMethod) || x.PaymentMethod.Equals("Efectivo"))).ToList())
-                {
-                    AddReferenceList(item, r);
-                    if (item.finalPrice == 0)
+                foreach (var r in referenceList.ToList())
+                {                    
+
+                    if (referenceList.Contains(r) && !r.used)
                     {
-                        referenceList.Remove(r);
-                        targetList.Remove(item);
+                        if(r.product.ToString().ToUpper().Trim() == item.product.ToString().ToUpper().Trim() && (r.PaymentMethod.ToString().ToUpper().Trim() == item.paymentMethod.ToString().ToUpper().Trim() || r.PaymentMethod.ToUpper().Trim() == "EFECTIVO".Trim()))
+                        {
+                            AddReferenceList(item, r);
+                            if (item.finalPrice <= 0)
+                            {
+                                r.used = true;
+                                referenceList.Remove(r);
+                                //Console.WriteLine(targetList.Count());
+                                targetList.Remove(item);
+                                //break;
+                            }
+                        }                        
+                    }
+                    //Console.WriteLine(r.price);
+                }
+                //Console.WriteLine(item.Id);
+            }
+            //int count = 0;
+            //while (targetList.Count() > 0)
+            //{
+            //    //Console.WriteLine("COunter" + referenceList.Count());
+            //    var reference = referenceList.FirstOrDefault();
+            //    var target = targetList.FirstOrDefault(x => x.finalPrice >= reference.price && x.product.ToString().ToUpper().Equals(reference.product.ToString().ToUpper()));
+            //    if (target != null)
+            //    {
+            //        AddReferenceList(target, reference);
+            //        if (target.finalPrice >= 0)
+            //        {
+            //            reference.used = true;
+            //            targetList.Remove(target);
+            //            referenceList.Remove(reference);                        
+            //        }
+            //        else
+            //        {
+            //            return;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (count == 0)
+            //            AddReferenceList(new Target(), reference);
+
+            //        count++;
+            //    }
+
+            //}
+            decimal total1 = 0;
+            decimal total2 = 0;
+            decimal total3 = 0;
+            decimal total4 = 0;
+            decimal total5 = 0;
+            decimal total6 = 0;
+            decimal total7 = 0;
+            ReaderQuery.WriteExcelFileEPPLUS(@"C:/Users/enriq/Downloads/Hoja1/Final.xlsx", ReaderQuery.ToDataTable2(responseList));
+            foreach (var res in responseList.OrderByDescending(x => x.price))
+            {
+                switch (res.IdTarget)
+                {
+                    case 1:
+                        total1 += res.price;
                         break;
-                    }
+                    case 2:
+                        total2 += res.price;
+                        break;
+                    case 3:
+                        total3 += res.price;
+                        break;
+                    case 4:
+                        total4 += res.price;
+                        break;
+                    case 5:
+                        total5 += res.price;
+                        break;
+                    case 6:
+                        total6 += res.price;
+                        break;
+                    case 7:
+                        total7 += res.price;
+                        break;
                 }
-
+                //Console.WriteLine(res.id + " | " + res.price + " | " + res.product + " | " + res.paymentMethod + " | " + res.IdTarget);
+                
             }
-
-            while (referenceList.Count() > 0)
-            {
-                var reference = referenceList.FirstOrDefault();
-                var target = targetList.FirstOrDefault(x => x.finalPrice >= reference.price && x.product.Equals(reference.product));
-                if (target != null)
-                {
-                    AddReferenceList(target, reference);
-                    if (target.finalPrice == 0)
-                    {
-                        targetList.Remove(target);
-                        referenceList.Remove(reference);
-                    }
-                }
-                else
-                {
-                    AddReferenceList(new Target(), reference);
-                }
-
-            }
-
-            foreach (var res in responseList.OrderBy(x => x.id))
-            {
-                Console.WriteLine(res.id + " | " + res.price + " | " + res.product + " | " + res.paymentMethod + " | " + res.IdTarget);
-            }
+            Console.WriteLine("Sum 1 = " + total1);
+            Console.WriteLine("Sum 2 = " + total2);
+            Console.WriteLine("Sum 3 = " + total3);
+            Console.WriteLine("Sum 4 = " + total4);
+            Console.WriteLine("Sum 5 = " + total5);
+            Console.WriteLine("Sum 6 = " + total6);
+            Console.WriteLine("Sum 7 = " + total7);
+            //Console.WriteLine(targetList.Count());
         }
 
         private static void AddReferenceList(Target item, Reference r)
         {
+            //if (!targetList.Contains(item)) return;
+            if (item.finalPrice - r.price <= 0)
+            {
+                //targetList.Remove(item);
+                return;
+            }
             item.finalPrice -= r.price;
 
-            var result = new Result()
-            {
-                id = r.id,
-                price = Convert.ToDecimal(r.price),
-                product = r.product,
-                paymentMethod = r.PaymentMethod,
-                IdTarget = item.Id
-            };
-            responseList.Add(result);
-            referenceList.Remove(r);
+            //var result = new Result()
+            //{
+            //    id = r.id,
+            //    price = r.price,
+            //    product = r.product,
+            //    paymentMethod = r.PaymentMethod,
+            //    IdTarget = item.Id
+            //};
+            int indexR = responseList.FindIndex(element => element.id == r.id);
+            r.used = true;
+            responseList[indexR].IdTarget = item.Id;
+            int index = referenceList.FindIndex(element => element.id == r.id);
+            referenceList.RemoveAt(index);
         }
     }
 
     public class Reference
     {
-        public int id;
-        public decimal price;
-        public string product;
-        public string PaymentMethod;
+        public int id { get; set; }
+        public decimal price { get; set; }
+        public string product { get; set; }
+        public string PaymentMethod { get; set; }
+        public bool used { get; set; }
     }
 
     public class Result
     {
-        public int id;
-        public decimal price;
-        public string product;
-        public string paymentMethod;
-        public int? IdTarget;
+        public int id { get; set; }
+        public decimal price { get; set; }
+        public string product { get; set; }
+        public string paymentMethod { get; set; }
+        public int? IdTarget { get; set; }
     }
 
     public class Target

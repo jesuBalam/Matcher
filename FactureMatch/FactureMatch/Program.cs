@@ -11,7 +11,8 @@ namespace FactureMatch
         static void Main(string[] args)
         {
             Matcher matcher = new Matcher();
-            matcher.GenerateDummyTable();
+            //matcher.GenerateDummyTable();
+            ReaderQuery.FillTables();
             matcher.ProcessDummyTables();
             Console.ReadKey();
         }

@@ -19,3 +19,8 @@ E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Deb
 E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csproj.CoreCompileInputs.cache
 E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.exe
 E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.pdb
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\bin\Debug\EPPlus.dll
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\bin\Debug\EPPlus.Interfaces.dll
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\bin\Debug\EPPlus.System.Drawing.dll
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\bin\Debug\EPPlus.xml
+E:\Developer\Hiuman\C#\XmlData\Matcher\Matcher\FactureMatch\FactureMatch\obj\Debug\FactureMatch.csproj.CopyComplete
