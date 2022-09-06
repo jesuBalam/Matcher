@@ -14,6 +14,7 @@ namespace FactureMatch
         private static DataTable tableResult;
         static bool isRunning;
         static bool hasValid;
+        static int count = 0;
         
         static decimal lastValidNumberDec;        
 
@@ -25,32 +26,43 @@ namespace FactureMatch
         private static List<Result> responseListAux = new List<Result>();
 
 
+
+        //Reuse 
+        static Result resultEqual = new Result();
+        static Result resultLess = new Result();
+        static bool foundedIncomplete;
+        static bool stopProces;
+
         public static void GenerateDummyTable()
         {
-            tableAmounts.Columns.Add("ID", typeof(string));
+            tableAmounts.Columns.Add("ID", typeof(int));
             tableAmounts.Columns.Add("Monto", typeof(decimal));
             tableAmounts.Columns.Add("Producto", typeof(string));
-            
+            tableAmounts.Columns.Add("MetodoPago", typeof(string));
 
-            tableAmounts.Rows.Add(1, 18, "Magna");
-            tableAmounts.Rows.Add(2, 11, "Magna");
-            tableAmounts.Rows.Add(3, 10, "Diesel");
-            tableAmounts.Rows.Add(4, 12, "Magna");
-            tableAmounts.Rows.Add(5, 11.40, "Diesel");
-            tableAmounts.Rows.Add(6, 13.80, "Diesel");
-            tableAmounts.Rows.Add(7, 6.00, "Diesel");
-            tableAmounts.Rows.Add(8, 300.00, "Diesel");
-            tableAmounts.Rows.Add(9, 96.00, "Diesel");
 
-            tableTargetAmount.Columns.Add("ID", typeof(string));
+
+            tableAmounts.Rows.Add(1, 20.97, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(2, 20.97, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(3, 20.97, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(4, 20.97, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(5, 21.37, "Magna", "Efectivo");
+            tableAmounts.Rows.Add(10, 22.60, "Diesel", "Tarjeta");
+            tableAmounts.Rows.Add(12, 22.60, "Diesel", "Tarjeta");            
+            tableAmounts.Rows.Add(13, 22.60, "Diesel", "Efectivo");            
+            tableAmounts.Rows.Add(14, 22.62, "Diesel", "Efectivo");
+            tableAmounts.Rows.Add(15, 22.67, "Diesel", "Efectivo");
+            tableAmounts.Rows.Add(16, 22.67, "Diesel", "Efectivo");
+
+
+            tableTargetAmount.Columns.Add("ID", typeof(int));
             tableTargetAmount.Columns.Add("Monto", typeof(decimal));
             tableTargetAmount.Columns.Add("Producto", typeof(string));
             tableTargetAmount.Columns.Add("MetodoPago", typeof(string));
 
-            tableTargetAmount.Rows.Add(1, 70, "Magna", "Efectivo");
-            tableTargetAmount.Rows.Add(2, 82, "Magna", "Tarjeta");
-            tableTargetAmount.Rows.Add(3, 106, "Magna", "Transferencia");
-            tableTargetAmount.Rows.Add(4, 70, "Magna", "Transferencia Oxxo");
+            tableTargetAmount.Rows.Add(1, 105.25, "Magna", "Efectivo");
+            tableTargetAmount.Rows.Add(2, 67.8, "Diesel", "Tarjeta");
+            tableTargetAmount.Rows.Add(3, 67.96, "Diesel", "Efectivo");
             //tableTargetAmount.Rows.Add(70, "Magna", "Transferencia Cell");
 
 
@@ -103,19 +115,21 @@ namespace FactureMatch
         {
 
             //Create Lists from data table
-            for (int row = 0; row < referenceTable.Rows.Count; row++)
+            for (int row = 0; row < 1800; row++)
             {
                 Reference reference = new Reference();
-                reference.id = referenceTable.Rows[row]["ID"].ToString();
+                reference.id = referenceTable.Rows[row]["Id"].ToString();
                 reference.price = Convert.ToDecimal(referenceTable.Rows[row]["Monto"]);
                 reference.product = referenceTable.Rows[row]["Producto"].ToString();
+                reference.paymentMethod = referenceTable.Rows[row]["FormPago"].ToString();
                 referenceList.Add(reference);
             }
 
             for (int row = 0; row < targetTable.Rows.Count; row++)
             {
                 Target target = new Target();
-                target.paymentMethod = targetTable.Rows[row]["MetodoPago"].ToString();
+                target.id = targetTable.Rows[row]["Id"].ToString();
+                target.paymentMethod = targetTable.Rows[row]["FormPago"].ToString();
                 target.finalPrice = Convert.ToDecimal(targetTable.Rows[row]["Monto"]);
                 target.product = targetTable.Rows[row]["Producto"].ToString();
                 targetList.Add(target);
@@ -124,20 +138,48 @@ namespace FactureMatch
             //Matcher
             for (int row = 0; row < targetList.Count; row++)
             {
+                Console.WriteLine("TargetList : " + row + " from " + targetList.Count);
                 if (referenceList.Count > 0)
                 {
+                    foundedIncomplete = false;
                     hasValid = false;
                     lastValidNumberDec = 0;
                     MatchRecursive(referenceList, targetList[row], new List<Reference>());
-
+                    Target tar = new Target();
+                    tar = targetList[row];
                     if (!hasValid)
                     {
                         foreach (var responseAux in responseListAux)
                         {
+                            //Console.WriteLine("Responses Aux Less:: " + responseAux.id + " |  " + responseAux.price + " |  " + responseAux.product + " |  " + responseAux.price + " |  " + responseAux.idReference);
                             responseList.Add(responseAux);
                             var refeFound = referenceList.Find(element => element.id == responseAux.id);
                             referenceList.Remove(refeFound);
+                            tar.finalPrice -= responseAux.price;
+
+
                         }
+                        responseListAux.Clear();
+                        lastValidNumberDec = 0;
+                        hasValid = false;
+                        foundedIncomplete = false;                        
+                        MatchRecursive(referenceList, tar, new List<Reference>(), true);
+                        if (!hasValid)
+                        {
+                            foreach (var responseAux in responseListAux)
+                            {
+                                responseList.Add(responseAux);
+                                var refeFound = referenceList.Find(element => element.id == responseAux.id);
+                                referenceList.Remove(refeFound);
+                                tar.finalPrice -= responseAux.price;
+                                //Console.WriteLine("Responses Aux Less:: " + responseAux.id + " |  " + responseAux.price + " |  " + responseAux.product + " |  " + responseAux.price + " |  " + responseAux.idReference);
+                            }
+                        }
+                        //foreach (var refL in referenceList)
+                        //{
+
+                        //    Console.WriteLine("LEFT:: " + refL.id + " | " + refL.price + " | " + refL.product + " | " + refL.paymentMethod);
+                        //}
                         responseListAux.Clear();
                     }
 
@@ -153,24 +195,24 @@ namespace FactureMatch
 
             DataTable resultTable = new DataTable();
             resultTable = referenceTable;
-            resultTable.Columns.Add("MetodoPago");
+            resultTable.Columns.Add("IdRef");
 
             for(int row=0; row<resultTable.Rows.Count; row++)
             {
-                resultTable.Rows[row]["MetodoPago"] = "";
+                resultTable.Rows[row]["IdRef"] = "";
                 if (row <= responseList.Count)
                 {
                     var responseFound = responseList.Find(element => element.id == resultTable.Rows[row]["ID"].ToString());
                     if (responseFound != null)
                     {
-                        resultTable.Rows[row]["MetodoPago"] = responseFound.paymentMethod;
+                        resultTable.Rows[row]["IdRef"] = responseFound.idReference;
                     }
                 }
             }
 
             foreach (var res in responseList)
             {
-                Console.WriteLine(res.id + " | " + res.price + " | " + res.product + " | " + res.paymentMethod);
+                Console.WriteLine(res.id + " | " + res.price + " | " + res.product + " | " + res.paymentMethod + " | " + res.idReference);
             }
 
             return resultTable;
@@ -180,62 +222,113 @@ namespace FactureMatch
         }
 
 
-        private static void MatchRecursive(List<Reference> numbers, Target target, List<Reference> partial)
-        {
+        private static void MatchRecursive(List<Reference> numbers, Target target, List<Reference> partial, bool nextToEfective = false)
+        {            
+            if (stopProces && count!= 0) 
+            {
+                numbers.Clear();
+                target = null;
+                partial.Clear();
+                return;
+            }
             decimal s = 0;
-            foreach (Reference x in partial) s += x.price;
-
+            foreach (Reference x in partial) 
+            {                
+                if (x.product.ToString().ToUpper() == target.product.ToString().ToUpper() && x.paymentMethod.ToString().ToUpper() == target.paymentMethod.ToString().ToUpper())
+                {
+                    s += x.price;
+                }
+                else if (nextToEfective)
+                {
+                    if(x.product.ToString().ToUpper() == target.product.ToString().ToUpper() && x.paymentMethod.ToString().ToUpper() == target.paymentMethod.ToString().ToUpper() || x.paymentMethod.ToString().ToUpper() == "EFECTIVO")
+                    {
+                        s += x.price;
+                    }
+                }
+            }
+            if(s!= target.finalPrice)
+            {
+                if (s < lastValidNumberDec)
+                {
+                    stopProces = true;
+                    return;
+                }
+            }
+            count++;
             //Check if match equals and remove from ref list
             if (s == target.finalPrice)
             {
 
-                Result resultFounded = responseList.Find(element => element.paymentMethod == target.paymentMethod);
+                Result resultFounded = responseList.Find(element => element.idReference == target.id);
                 if (!responseList.Contains(resultFounded))
+                {
+                    foreach (var refe in partial)
+                    {
+                        var refeFound = referenceList.Find(element => element.id == refe.id);                        
+                        referenceList.Remove(refeFound);
+                        Result resultEqual = new Result();
+                        resultEqual.id = refe.id;
+                        resultEqual.price = refe.price;
+                        resultEqual.product = refe.product;
+                        resultEqual.paymentMethod = refe.paymentMethod;
+                        resultEqual.idReference = target.id;
+                        responseList.Add(resultEqual);
+                        numbers.Remove(refe);
+                    }
+                    hasValid = true;
+                    return;
+                }
+                //TODO CHECK THIS!!!!!!
+                if (nextToEfective)
                 {
                     foreach (var refe in partial)
                     {
                         var refeFound = referenceList.Find(element => element.id == refe.id);
                         referenceList.Remove(refeFound);
-                        Result result = new Result();
-                        result.id = refe.id;
-                        result.price = refe.price;
-                        result.product = refe.product;
-                        result.paymentMethod = target.paymentMethod;
-                        responseList.Add(result);
+                        Result resultEqual = new Result();
+                        resultEqual.id = refe.id;
+                        resultEqual.price = refe.price;
+                        resultEqual.product = refe.product;
+                        resultEqual.paymentMethod = refe.paymentMethod;
+                        resultEqual.idReference = target.id;
+                        responseList.Add(resultEqual);
+                        numbers.Remove(refe);
                     }
-
-                    //for (int i = 0; i < partial.ToArray().Length; i++)
-                    //{
-                    //    Console.WriteLine("Eq sum" + partial.ToArray()[i].id + " | " + partial.ToArray()[i].price);
-                    //}
                     hasValid = true;
                     return;
                 }
+                return;
+                //for (int i = 0; i < partial.ToArray().Length; i++)
+                //{
+                //    Console.WriteLine("Eq sum" + partial.ToArray()[i].id + " | " + partial.ToArray()[i].price);
+                //}
 
             }
 
             //Check if match less than ref and remove from ref list
             if (s < target.finalPrice)
             {
-
-                if (s > lastValidNumberDec)
+                if(s< lastValidNumberDec)
                 {
-                    //Result resultFounded = responseListAux.Find(element => element.paymentMethod == target.paymentMethod);
-                    //if (!responseListAux.Contains(resultFounded))
-                    //{
-
-                    //}                    
-
+                    return;
+                }
+                
+                if (s > lastValidNumberDec)
+                {                    
+                    foundedIncomplete = true;
+                    Console.WriteLine("Founded");
                     lastValidNumberDec = s;
                     responseListAux.Clear();
                     foreach (var refe in partial)
                     {
-                        Result res = new Result();
-                        res.id = refe.id;
-                        res.price = refe.price;
-                        res.product = refe.product;
-                        res.paymentMethod = target.paymentMethod;
-                        responseListAux.Add(res);
+                        Result resultLess = new Result();
+                        resultLess.id = refe.id;
+                        resultLess.price = refe.price;
+                        resultLess.product = refe.product;
+                        resultLess.paymentMethod = refe.paymentMethod;
+                        resultLess.idReference = target.id;
+                        responseListAux.Add(resultLess);
+                        numbers.Remove(refe);
                     }
                 }
             }
@@ -250,14 +343,14 @@ namespace FactureMatch
             }
 
             for (int i = 0; i < numbers.Count; i++)
-            {
+            {                
                 List<Reference> remaining = new List<Reference>();
                 Reference n = numbers[i];
                 for (int j = i + 1; j < numbers.Count; j++) remaining.Add(numbers[j]);
 
                 List<Reference> partialList = new List<Reference>(partial);
-                partialList.Add(n);
-                MatchRecursive(remaining, target, partialList);
+                partialList.Add(n);                
+                MatchRecursive(remaining, target, partialList, nextToEfective);
             }
         }
     }
@@ -267,6 +360,7 @@ namespace FactureMatch
         public string id;
         public decimal price;
         public string product;
+        public string paymentMethod;
     }
 
     public class Result
@@ -275,10 +369,12 @@ namespace FactureMatch
         public decimal price;
         public string product;
         public string paymentMethod;
+        public string idReference;
     }
 
     public class Target
     {
+        public string id;
         public string paymentMethod;
         public decimal finalPrice;
         public string product;
